@@ -153,6 +153,15 @@ class HomeFragment : Fragment() {
                 Intent(requireContext(), AapService::class.java))
         }
 
+        // Auto-poke last paired Bluetooth device on startup
+        if (!commManager.isConnected && appSettings.autoStartBluetoothDeviceMacs.isNotEmpty()) {
+            val intent = Intent(requireContext(), AapService::class.java).apply {
+                action = AapService.ACTION_NATIVE_AA_POKE
+                putExtra(AapService.EXTRA_MAC, appSettings.autoStartBluetoothDeviceMacs.first())
+            }
+            ContextCompat.startForegroundService(requireContext(), intent)
+        }
+
         for (methodId in appSettings.autoConnectPriorityOrder) {
             if (commManager.isConnected) break
             when (methodId) {
@@ -366,54 +375,18 @@ class HomeFragment : Fragment() {
         }
 
         wifi.setOnClickListener {
-            val mode = App.provide(requireContext()).settings.wifiConnectionMode
-            when (mode) {
-                1 -> { // Auto (Headunit Server) - One-Shot Scan
-                    if (commManager.isConnected) {
-                        // Already connected
-                    } else if (AapService.scanningState.value) {
-                        Toast.makeText(requireContext(), getString(R.string.already_scanning), Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(requireContext(), getString(R.string.searching_headunit_server), Toast.LENGTH_SHORT).show()
-                        val intent = Intent(requireContext(), AapService::class.java).apply {
-                            action = AapService.ACTION_START_WIRELESS_SCAN
-                        }
-                        ContextCompat.startForegroundService(requireContext(), intent)
-                    }
-                }
-                2 -> { // Helper (Wireless Launcher)
-                    if (commManager.isConnected) {
-                        // Already connected
-                    } else {
-                        val strategy = App.provide(requireContext()).settings.helperConnectionStrategy
-                        if (strategy == 2) {
-                            // Nearby Devices — show live discovery dialog
-                            showNearbyDeviceSelector()
-                        } else if (AapService.scanningState.value) {
-                            Toast.makeText(requireContext(), getString(R.string.already_searching_phone), Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(requireContext(), getString(R.string.searching_phone), Toast.LENGTH_SHORT).show()
-                            val intent = Intent(requireContext(), AapService::class.java).apply {
-                                action = AapService.ACTION_START_WIRELESS_SCAN
-                            }
-                            ContextCompat.startForegroundService(requireContext(), intent)
-                        }
-                    }
-                }
-                3 -> { // Native AA
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && 
-                        ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                        bluetoothPermissionLauncher.launch(android.Manifest.permission.BLUETOOTH_CONNECT)
-                    } else {
-                        showNativeAaDeviceSelector()
-                    }
-                }
-                else -> { // Manual (0) -> Open List
-                    val controller = findNavController()
-                    if (controller.currentDestination?.id == R.id.homeFragment) {
-                        controller.navigate(R.id.action_homeFragment_to_networkListFragment)
-                    }
-                }
+            if (commManager.isConnected) {
+                val aapIntent = Intent(requireContext(), AapProjectionActivity::class.java)
+                aapIntent.putExtra(AapProjectionActivity.EXTRA_FOCUS, true)
+                startActivity(aapIntent)
+                return@setOnClickListener
+            }
+            // Always show Bluetooth device picker (Native AA)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                bluetoothPermissionLauncher.launch(android.Manifest.permission.BLUETOOTH_CONNECT)
+            } else {
+                showNativeAaDeviceSelector()
             }
         }
 

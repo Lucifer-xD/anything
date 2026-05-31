@@ -312,7 +312,7 @@ class Settings(context: Context) {
                 prefs.edit().putInt("wifi-connection-mode", 3).remove("native-aa-wireless").apply()
                 return 3
             }
-            return prefs.getInt("wifi-connection-mode", 2) // Default 2 (Wireless Helper)
+            return prefs.getInt("wifi-connection-mode", 3) // Default 3 (Native AA / Bluetooth)
         }
         set(value) { prefs.edit().putInt("wifi-connection-mode", value).apply() }
 

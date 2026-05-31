@@ -168,7 +168,7 @@
         app:backgroundTint="@null"
         android:background="@drawable/btn_secondary"
         app:iconGravity="textStart"
-        app:icon="@drawable/ic_network_wifi_white"
+        app:icon="@drawable/ic_phone"
         app:iconTint="@color/nex_blue"
         app:iconSize="28dp"
         app:iconPadding="0dp" />
@@ -176,7 +176,7 @@
         android:id="@+id/wifi_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/wifi"
+        android:text="Connect"
         android:textColor="#888888"
         android:textSize="12sp"
         android:textStyle="bold"
