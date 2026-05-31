@@ -116,7 +116,7 @@ class HomeFragment : Fragment() {
 
         // Entrance animation: buttons slide up + fade in
         val fadeInUp = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in_up)
-        view.findViewById<View>(R.id.main_buttons_layout)?.startAnimation(fadeInUp)
+        self_mode_button.startAnimation(fadeInUp)
         view.findViewById<View>(R.id.secondary_row)?.let {
             val delayed = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in_up)
             delayed.startOffset = 120
