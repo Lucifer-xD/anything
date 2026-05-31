@@ -40,6 +40,10 @@ import com.andrerinas.headunitrevived.utils.Settings
 import com.andrerinas.headunitrevived.utils.VpnControl
 import com.andrerinas.headunitrevived.utils.BluetoothHelper
 import com.andrerinas.headunitrevived.connection.CommManager
+import android.animation.ObjectAnimator
+import android.animation.AnimatorSet
+import android.view.MotionEvent
+import android.view.animation.AnimationUtils
 
 class HomeFragment : Fragment() {
 
@@ -75,6 +79,7 @@ class HomeFragment : Fragment() {
     private lateinit var statusTitle: TextView
     private lateinit var statusSubtitle: TextView
     private lateinit var statusBadge: TextView
+    private var pulseAnimator: ObjectAnimator? = null
     private var hasAttemptedAutoConnect = false
     private var hasAttemptedSingleUsbAutoConnect = false
     private var activeDialog: androidx.appcompat.app.AlertDialog? = null
@@ -108,6 +113,20 @@ class HomeFragment : Fragment() {
         statusSubtitle = view.findViewById(R.id.status_subtitle)
         statusBadge = view.findViewById(R.id.status_badge)
         updateStatusCard(commManager.connectionState.value)
+
+        // Entrance animation: buttons slide up + fade in
+        val fadeInUp = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in_up)
+        view.findViewById<View>(R.id.main_buttons_layout)?.startAnimation(fadeInUp)
+        view.findViewById<View>(R.id.secondary_row)?.let {
+            val delayed = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in_up)
+            delayed.startOffset = 120
+            it.startAnimation(delayed)
+        }
+
+        // Press animations on all buttons
+        listOf(self_mode_button, usb, wifi, settings).forEach { btn ->
+            addPressAnimation(btn)
+        }
 
         setupListeners()
         updateProjectionButtonText()
@@ -593,6 +612,36 @@ class HomeFragment : Fragment() {
         exitButton.setTextColor(Color.WHITE)
     }
 
+    @android.annotation.SuppressLint("ClickableViewAccessibility")
+    private fun addPressAnimation(view: View) {
+        view.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN ->
+                    v.animate().scaleX(0.93f).scaleY(0.93f).setDuration(80).start()
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL ->
+                    v.animate().scaleX(1f).scaleY(1f).setDuration(150)
+                        .setInterpolator(android.view.animation.OvershootInterpolator(1.5f)).start()
+            }
+            false
+        }
+    }
+
+    private fun startStatusPulse() {
+        pulseAnimator?.cancel()
+        pulseAnimator = ObjectAnimator.ofFloat(statusDot, "alpha", 1f, 0.15f).apply {
+            duration = 700
+            repeatMode = ObjectAnimator.REVERSE
+            repeatCount = ObjectAnimator.INFINITE
+            start()
+        }
+    }
+
+    private fun stopStatusPulse() {
+        pulseAnimator?.cancel()
+        pulseAnimator = null
+        statusDot.animate().alpha(1f).setDuration(200).start()
+    }
+
     private fun updateStatusCard(state: CommManager.ConnectionState) {
         val ctx = context ?: return
         val dotColor: Int
@@ -640,6 +689,15 @@ class HomeFragment : Fragment() {
         statusSubtitle.text = subtitle
         statusBadge.text = badge
         statusBadge.setTextColor(dotColor)
+
+        // Pulse dot when connecting, stop when idle or active
+        if (state is CommManager.ConnectionState.Connecting ||
+            state is CommManager.ConnectionState.Connected ||
+            state is CommManager.ConnectionState.StartingTransport) {
+            startStatusPulse()
+        } else {
+            stopStatusPulse()
+        }
     }
 
     companion object {
