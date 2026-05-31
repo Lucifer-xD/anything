@@ -97,7 +97,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.andrerinas.headunitrevived"
+        applicationId = "com.lucifer.nexdrive"
         minSdk = 16
         targetSdk = 36
         versionCode = 70
