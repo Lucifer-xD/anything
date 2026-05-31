@@ -1,5 +1,19 @@
 <resources>
     <string name="app_name">Headunit Revived</string>
+
+    <!-- Status Card -->
+    <string name="status_waiting">Waiting for Connection</string>
+    <string name="status_waiting_subtitle">Bluetooth handshake ready · Tap WiFi to connect</string>
+    <string name="status_connecting">Connecting…</string>
+    <string name="status_connecting_subtitle">Establishing link with your phone</string>
+    <string name="status_connected_handshake">Handshaking…</string>
+    <string name="status_connected_handshake_subtitle">Starting Android Auto session</string>
+    <string name="status_aa_active">Android Auto Active</string>
+    <string name="status_aa_active_subtitle">Projection is running</string>
+    <string name="status_error_title">Connection Error</string>
+    <string name="status_badge_ready">READY</string>
+    <string name="status_badge_live">LIVE</string>
+    <string name="status_badge_error">ERROR</string>
     <string name="menu">Menu</string>
     <string name="settings">Settings</string>
 

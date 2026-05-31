@@ -33,4 +33,12 @@
     <!-- Segmented Button Colors -->
     <color name="segmented_button_stroke">#808080</color>
 
+    <!-- Status Card Colors -->
+    <color name="card_surface">#141C2F</color>
+    <color name="card_border">#1C2740</color>
+    <color name="status_connected">#10B981</color>
+    <color name="status_connecting">#F59E0B</color>
+    <color name="status_disconnected">#4B5563</color>
+    <color name="status_error">#EF4444</color>
+
 </resources>

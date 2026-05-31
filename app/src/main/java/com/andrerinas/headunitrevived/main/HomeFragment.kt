@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.collect
 import com.andrerinas.headunitrevived.utils.Settings
 import com.andrerinas.headunitrevived.utils.VpnControl
 import com.andrerinas.headunitrevived.utils.BluetoothHelper
+import com.andrerinas.headunitrevived.connection.CommManager
 
 class HomeFragment : Fragment() {
 
@@ -70,6 +71,10 @@ class HomeFragment : Fragment() {
     private lateinit var wifi_text_view: TextView
     private lateinit var exitButton: Button
     private lateinit var self_mode_text: TextView
+    private lateinit var statusDot: View
+    private lateinit var statusTitle: TextView
+    private lateinit var statusSubtitle: TextView
+    private lateinit var statusBadge: TextView
     private var hasAttemptedAutoConnect = false
     private var hasAttemptedSingleUsbAutoConnect = false
     private var activeDialog: androidx.appcompat.app.AlertDialog? = null
@@ -98,13 +103,21 @@ class HomeFragment : Fragment() {
         wifi_text_view = view.findViewById(R.id.wifi_text)
         exitButton = view.findViewById(R.id.exit_button)
         self_mode_text = view.findViewById(R.id.self_mode_text)
+        statusDot = view.findViewById(R.id.status_dot)
+        statusTitle = view.findViewById(R.id.status_title)
+        statusSubtitle = view.findViewById(R.id.status_subtitle)
+        statusBadge = view.findViewById(R.id.status_badge)
+        updateStatusCard(commManager.connectionState.value)
 
         setupListeners()
         updateProjectionButtonText()
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                commManager.connectionState.collect { updateProjectionButtonText() }
+                commManager.connectionState.collect { state ->
+                    updateProjectionButtonText()
+                    updateStatusCard(state)
+                }
             }
         }
 
@@ -578,6 +591,55 @@ class HomeFragment : Fragment() {
         }
 
         exitButton.setTextColor(Color.WHITE)
+    }
+
+    private fun updateStatusCard(state: CommManager.ConnectionState) {
+        val ctx = context ?: return
+        val dotColor: Int
+        val title: String
+        val subtitle: String
+        val badge: String
+
+        when (state) {
+            is CommManager.ConnectionState.TransportStarted -> {
+                dotColor = ContextCompat.getColor(ctx, R.color.status_connected)
+                title = getString(R.string.status_aa_active)
+                subtitle = getString(R.string.status_aa_active_subtitle)
+                badge = getString(R.string.status_badge_live)
+            }
+            is CommManager.ConnectionState.HandshakeComplete,
+            is CommManager.ConnectionState.StartingTransport,
+            is CommManager.ConnectionState.Connected -> {
+                dotColor = ContextCompat.getColor(ctx, R.color.status_connecting)
+                title = getString(R.string.status_connected_handshake)
+                subtitle = getString(R.string.status_connected_handshake_subtitle)
+                badge = "···"
+            }
+            is CommManager.ConnectionState.Connecting -> {
+                dotColor = ContextCompat.getColor(ctx, R.color.status_connecting)
+                title = getString(R.string.status_connecting)
+                subtitle = getString(R.string.status_connecting_subtitle)
+                badge = "···"
+            }
+            is CommManager.ConnectionState.Error -> {
+                dotColor = ContextCompat.getColor(ctx, R.color.status_error)
+                title = getString(R.string.status_error_title)
+                subtitle = state.message.take(70)
+                badge = getString(R.string.status_badge_error)
+            }
+            else -> {
+                dotColor = ContextCompat.getColor(ctx, R.color.status_disconnected)
+                title = getString(R.string.status_waiting)
+                subtitle = getString(R.string.status_waiting_subtitle)
+                badge = getString(R.string.status_badge_ready)
+            }
+        }
+
+        statusDot.backgroundTintList = ColorStateList.valueOf(dotColor)
+        statusTitle.text = title
+        statusSubtitle.text = subtitle
+        statusBadge.text = badge
+        statusBadge.setTextColor(dotColor)
     }
 
     companion object {
