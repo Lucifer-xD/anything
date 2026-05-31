@@ -4,144 +4,163 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_buttons_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000000">
 
-    <!-- Connection Status Card -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/status_card"
-        android:layout_width="0dp"
+    <!-- Top bar: App name left, status right -->
+    <TextView
+        android:id="@+id/app_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="14dp"
-        app:cardCornerRadius="18dp"
-        app:cardElevation="8dp"
-        app:cardBackgroundColor="@color/card_surface"
+        android:text="NexDrive"
+        android:textColor="@color/nex_blue"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.08"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_max="1200dp">
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Status indicator (top right) -->
+    <LinearLayout
+        android:id="@+id/status_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_status_card"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <View
+            android:id="@+id/status_dot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/bg_status_dot"
+            android:layout_marginEnd="8dp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="13dp"
-            android:paddingBottom="13dp"
-            android:gravity="center_vertical">
-
-            <View
-                android:id="@+id/status_dot"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:background="@drawable/bg_status_dot"
-                android:layout_marginEnd="14dp" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/status_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/status_waiting"
-                    android:textColor="@color/text_primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/status_subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/status_waiting_subtitle"
-                    android:textColor="@color/text_second"
-                    android:textSize="12sp"
-                    android:layout_marginTop="1dp" />
-            </LinearLayout>
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/status_badge"
+                android:id="@+id/status_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/status_badge_ready"
-                android:textColor="@color/status_disconnected"
+                android:text="@string/status_waiting"
+                android:textColor="#FFFFFF"
                 android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:textStyle="bold" />
 
-    <!-- Main Action Buttons -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main_buttons_layout"
+            <TextView
+                android:id="@+id/status_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#666666"
+                android:textSize="10sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/status_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status_badge_ready"
+            android:textColor="@color/status_disconnected"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Thin neon divider under header -->
+    <View
+        android:id="@+id/divider"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        app:layout_constraintWidth_max="1200dp"
-        app:layout_constraintTop_toBottomOf="@+id/status_card"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="1dp"
+        android:background="#00B4FF"
+        android:alpha="0.3"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/app_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- PRIMARY: Large Android Auto button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/self_mode_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintBottom_toTopOf="@+id/secondary_row"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.35">
+        app:layout_constraintVertical_weight="1"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/btn_primary"
+        app:iconGravity="textStart"
+        app:icon="@drawable/ic_launch_white"
+        app:iconTint="#FFFFFF"
+        app:iconSize="48dp"
+        app:iconPadding="0dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp" />
 
-        <!-- Android Auto / Self Mode Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/self_mode_button"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:elevation="8dp"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/usb_button"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            android:layout_margin="32dp"
-            app:backgroundTint="@null"
-            android:background="@drawable/gradient_blue"
-            app:iconGravity="textStart"
-            app:icon="@drawable/ic_launch_white"
-            app:iconTint="#ffffff"
-            app:iconSize="72dp"
-            app:iconPadding="0dp"
-            android:paddingTop="0dp"
-            android:paddingBottom="0dp" />
-        <TextView
-            android:id="@+id/self_mode_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/self_mode_button"
-            app:layout_constraintStart_toStartOf="@+id/self_mode_button"
-            app:layout_constraintEnd_toEndOf="@+id/self_mode_button"
-            android:text="@string/self_mode"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.02"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="6dp" />
+    <TextView
+        android:id="@+id/self_mode_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/self_mode"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        app:layout_constraintBottom_toTopOf="@+id/secondary_row"
+        app:layout_constraintStart_toStartOf="@+id/self_mode_button"
+        app:layout_constraintEnd_toEndOf="@+id/self_mode_button"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
 
-        <!-- USB Button -->
+    <!-- SECONDARY row: USB, WiFi, Settings -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/secondary_row"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/exit_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- USB -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/usb_button"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:elevation="8dp"
-            app:layout_constraintDimensionRatio="1:1"
+            android:layout_height="72dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/self_mode_button"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/wifi_button"
-            android:layout_margin="32dp"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            android:layout_marginEnd="8dp"
             app:backgroundTint="@null"
-            android:background="@drawable/gradient_orange"
+            android:background="@drawable/btn_secondary"
             app:iconGravity="textStart"
             app:icon="@drawable/ic_usb_white"
-            app:iconTint="#ffffff"
-            app:iconSize="72dp"
+            app:iconTint="@color/nex_blue"
+            app:iconSize="28dp"
             app:iconPadding="0dp"
             android:paddingTop="0dp"
             android:paddingBottom="0dp" />
@@ -149,34 +168,32 @@
             android:id="@+id/usb_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@string/usb"
+            android:textColor="#888888"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="6dp"
             app:layout_constraintTop_toBottomOf="@+id/usb_button"
             app:layout_constraintStart_toStartOf="@+id/usb_button"
-            app:layout_constraintEnd_toEndOf="@+id/usb_button"
-            android:text="@string/usb"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.02"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="6dp" />
+            app:layout_constraintEnd_toEndOf="@+id/usb_button" />
 
-        <!-- WiFi / Wireless Button -->
+        <!-- WiFi -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/wifi_button"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:elevation="8dp"
-            app:layout_constraintDimensionRatio="1:1"
+            android:layout_height="72dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/usb_button"
             app:layout_constraintEnd_toStartOf="@+id/settings_button"
-            android:layout_margin="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             app:backgroundTint="@null"
-            android:background="@drawable/gradient_purple"
+            android:background="@drawable/btn_secondary"
             app:iconGravity="textStart"
             app:icon="@drawable/ic_network_wifi_white"
-            app:iconTint="#ffffff"
-            app:iconSize="72dp"
+            app:iconTint="@color/nex_blue"
+            app:iconSize="28dp"
             app:iconPadding="0dp"
             android:paddingTop="0dp"
             android:paddingBottom="0dp" />
@@ -184,34 +201,31 @@
             android:id="@+id/wifi_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@string/wifi"
+            android:textColor="#888888"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="6dp"
             app:layout_constraintTop_toBottomOf="@+id/wifi_button"
             app:layout_constraintStart_toStartOf="@+id/wifi_button"
-            app:layout_constraintEnd_toEndOf="@+id/wifi_button"
-            android:text="@string/wifi"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.02"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="6dp" />
+            app:layout_constraintEnd_toEndOf="@+id/wifi_button" />
 
-        <!-- Settings Button -->
+        <!-- Settings -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settings_button"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:elevation="8dp"
-            app:iconGravity="textStart"
-            app:layout_constraintDimensionRatio="1:1"
+            android:layout_height="72dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/wifi_button"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="32dp"
+            android:layout_marginStart="8dp"
             app:backgroundTint="@null"
-            android:background="@drawable/gradient_darkblue"
+            android:background="@drawable/btn_secondary"
+            app:iconGravity="textStart"
             app:icon="@drawable/ic_settings_white"
-            app:iconTint="#ffffff"
-            app:iconSize="72dp"
+            app:iconTint="@color/nex_blue"
+            app:iconSize="28dp"
             app:iconPadding="0dp"
             android:paddingTop="0dp"
             android:paddingBottom="0dp" />
@@ -219,20 +233,19 @@
             android:id="@+id/settings_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@string/settings"
+            android:textColor="#888888"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="6dp"
             app:layout_constraintTop_toBottomOf="@+id/settings_button"
             app:layout_constraintStart_toStartOf="@+id/settings_button"
-            app:layout_constraintEnd_toEndOf="@+id/settings_button"
-            android:text="@string/settings"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.02"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="6dp" />
+            app:layout_constraintEnd_toEndOf="@+id/settings_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Exit Button -->
+    <!-- Exit -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/exit_button"
         android:layout_width="wrap_content"
@@ -241,9 +254,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"
         android:text="@string/exit"
-        app:backgroundTint="#33FFFFFF"
-        android:textColor="@color/text_second"
-        app:cornerRadius="24dp"
-        android:textSize="13sp" />
+        app:backgroundTint="#00000000"
+        android:textColor="#444444"
+        app:strokeColor="#222222"
+        app:strokeWidth="1dp"
+        app:cornerRadius="20dp"
+        android:textSize="12sp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,34 +4,39 @@
     <color name="material_grey_700">#616161</color>
     <color name="material_grey_900">#212121</color>
 
-    <color name="primary_dark">@color/material_grey_900</color>
-    <color name="primary_light">#fffbff</color>
+    <color name="primary_dark">#000000</color>
+    <color name="primary_light">#000000</color>
     <color name="material_orange_700">#f57c00</color>
     <color name="material_green_700">#388e3c</color>
 
-    <color name="text_primary">#f7f7f7</color>
-    <color name="text_second">#bdbebd</color>
-    <color name="text_dark">#b5babd</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_second">#888888</color>
+    <color name="text_dark">#888888</color>
     <color name="black_overlay">#66000000</color>
-    
-    <color name="setting_background_color">#F0F0F0</color>
-    <color name="brand_teal">#009688</color>
-    <color name="divider_color">#1F000000</color>
-    <color name="adaptive_text_color">#DE000000</color>
+
+    <color name="setting_background_color">#111111</color>
+    <color name="brand_teal">#00B4FF</color>
+    <color name="divider_color">#222222</color>
+    <color name="adaptive_text_color">#FFFFFF</color>
 
     <color name="text_shadow">@android:color/transparent</color>
     <color name="extreme_dark_background">#000000</color>
     <color name="splash_text_white">#FFFFFF</color>
-    <color name="splash_text_revived">#214876</color>
+    <color name="splash_text_revived">#00B4FF</color>
+
+    <!-- NexDrive Accent -->
+    <color name="nex_blue">#00B4FF</color>
+    <color name="nex_surface">#111111</color>
+    <color name="nex_border">#222222</color>
 
     <!-- Custom Menu Colors -->
-    <color name="color_projection_blue">#3198ef</color>
+    <color name="color_projection_blue">#000000</color>
     <color name="color_usb_orange">#f57c00</color>
     <color name="color_wifi_purple">#8e44ad</color>
     <color name="color_settings_darkblue">#2c3e50</color>
 
     <!-- Segmented Button Colors -->
-    <color name="segmented_button_stroke">#808080</color>
+    <color name="segmented_button_stroke">#00B4FF</color>
 
     <!-- Status Card Colors -->
     <color name="card_surface">#141C2F</color>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Headunit Revived</string>
+    <string name="app_name">NexDrive</string>
 
     <!-- Status Card -->
     <string name="status_waiting">Waiting for Connection</string>
