@@ -62,6 +62,49 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build
 
+  free-ipa:
+    name: Unsigned .ipa (for AltStore/Sideloadly)
+    runs-on: macos-14
+    needs: core-tests
+    # Builds the no-extension free variant for a real device WITHOUT signing, then
+    # packages an unsigned .ipa. You then sign+install it on your iPhone with a
+    # free Apple ID using Sideloadly/AltStore on Windows — no Mac, no $99 needed.
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate free-variant project
+        working-directory: ios
+        run: xcodegen generate --spec project-free.yml
+      - name: Build unsigned (device)
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project NimbusVPN.xcodeproj \
+            -scheme NimbusVPN \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build
+      - name: Package .ipa
+        working-directory: ios
+        run: |
+          set -euo pipefail
+          APP=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name '*.app' | head -1)
+          echo "Packaging $APP"
+          rm -rf Payload && mkdir Payload
+          cp -R "$APP" Payload/
+          zip -qry NimbusVPN-unsigned.ipa Payload
+          ls -lh NimbusVPN-unsigned.ipa
+      - name: Upload unsigned .ipa
+        uses: actions/upload-artifact@v4
+        with:
+          name: NimbusVPN-unsigned-ipa
+          path: ios/NimbusVPN-unsigned.ipa
+          if-no-files-found: error
+
   release-ipa:
     name: Signed .ipa (opt-in)
     runs-on: macos-14
