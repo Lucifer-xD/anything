@@ -1,10 +1,37 @@
 # Building a `.ipa`
 
 An `.ipa` cannot be produced in this Linux session (no Xcode) or from source
-alone (Apple code-signing is required). Here are the three realistic paths, from
-easiest to most automated.
+alone (Apple code-signing is required). Here are the realistic paths, from
+free-to-run up to a fully signed release.
 
-## What you need first (all paths)
+## Free & cheap: run the app without paying
+
+The **only** hard cost is the VPN entitlement (see below). Everything else is
+free, because the app defaults to `SimulatedTunnelEngine` and needs no special
+capability to run:
+
+| How | Cost | Needs | Runs |
+|-----|------|-------|------|
+| **iOS Simulator** | free | a Mac + Xcode, **no Apple account** | Full app UI, all screens, import/edit, sim engine |
+| **Real device, free Apple ID** | free | a Mac + Xcode + `project-free.yml` variant | Same, on your iPhone (re-sign every 7 days) |
+| **GitHub Actions / Codemagic / Bitrise** free tier | free | just push the repo | Compiles app + runs the 65 tests on a macOS runner |
+| **Cheap cloud Mac** (MacinCloud, Scaleway, AWS EC2 mac, MacStadium) | ~$1–5/hr or ~$20/mo | nothing local | Build + Archive |
+
+Use the bundled **no-extension variant** for free-account/simulator builds:
+
+```bash
+cd ios
+xcodegen generate --spec project-free.yml
+open NimbusVPN.xcodeproj      # select your free Apple ID, Run
+```
+
+The **one unavoidable cost** is the real VPN: Apple only grants the
+`packet-tunnel-provider` entitlement and App Groups to the **paid Apple Developer
+Program ($99/yr)**. No free tier, sideload tool (AltStore/Sideloadly), or trick
+changes that — a free personal team cannot sign a Network Extension. So the
+system-VPN toggle needs the $99 account; the rest of the app does not.
+
+## What you need first (paid / real-tunnel path)
 
 1. **A Mac with Xcode 15/16.**
 2. **An Apple Developer Program membership** ($99/yr) — required for the

@@ -1,0 +1,75 @@
+# Free-tier XcodeGen spec: the Nimbus app WITHOUT the Packet Tunnel extension.
+#
+# Why: the NetworkExtension (`packet-tunnel-provider`) entitlement and App Groups
+# require a *paid* Apple Developer account. This variant drops the extension and
+# all special entitlements, so it builds and runs for FREE:
+#   • in the iOS Simulator with no Apple account at all, or
+#   • on a real device signed with a free personal Apple ID (7-day profile).
+#
+# The app defaults to `SimulatedTunnelEngine`, so the entire experience — import,
+# the adaptive editor, dashboard, stats, logs, settings, themes — works. Only the
+# real system-VPN toggle is unavailable (it needs the paid entitlement).
+#
+#   cd ios
+#   xcodegen generate --spec project-free.yml
+#   open NimbusVPN.xcodeproj      # pick your free Apple ID team, Run
+#
+# Or purely in the simulator (no account, no signing):
+#   xcodebuild -project NimbusVPN.xcodeproj -scheme NimbusVPN \
+#     -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+#     CODE_SIGNING_ALLOWED=NO build
+
+name: NimbusVPN
+options:
+  bundleIdPrefix: net.nimbus
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.9"
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_STRICT_CONCURRENCY: targeted
+
+packages:
+  NimbusKit:
+    path: .
+
+targets:
+  NimbusVPN:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      # All App/ sources compile fine — PacketTunnelEngine links NetworkExtension
+      # at build time but is never used (the app defaults to SimulatedTunnelEngine),
+      # so no paid entitlement is exercised at runtime.
+      - path: App
+    dependencies:
+      - package: NimbusKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.nimbus.vpn.free
+        INFOPLIST_FILE: App/Resources/Info.plist
+        # No CODE_SIGN_ENTITLEMENTS → no special capabilities → free-account friendly.
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+    scheme:
+      testTargets:
+        - NimbusVPNTests
+
+  NimbusVPNTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: AppTests
+    dependencies:
+      - target: NimbusVPN
+      - package: NimbusKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.nimbus.vpn.free.tests
