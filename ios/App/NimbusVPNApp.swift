@@ -14,7 +14,7 @@ struct NimbusVPNApp: App {
         let configuration = AppEnvironmentConfiguration(
             storageDirectory: container.appendingPathComponent("Nimbus", isDirectory: true),
             seedSampleData: true,
-            engine: SimulatedTunnelEngine(),            // ← swap for PacketTunnelEngine in production
+            engine: makeTunnelEngine(),                 // real Packet Tunnel engine in the full build
             subscriptionFetcher: URLSessionSubscriptionFetcher(),
             appLockAuthenticator: BiometricAuthenticator(),
             syncCipher: makeSyncCipher(),
@@ -39,5 +39,16 @@ private func makeSyncCipher() -> ConfigurationCipher {
     return AESGCMCipher()
     #else
     return PassthroughCipher()
+    #endif
+}
+
+/// The full (paid) build defines `NIMBUS_REAL_TUNNEL` and drives the system VPN
+/// through the Packet Tunnel extension; the free / no-extension build uses the
+/// in-process simulated engine.
+private func makeTunnelEngine() -> TunnelEngine {
+    #if NIMBUS_REAL_TUNNEL
+    return PacketTunnelEngine()
+    #else
+    return SimulatedTunnelEngine()
     #endif
 }

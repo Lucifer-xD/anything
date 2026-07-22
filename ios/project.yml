@@ -31,6 +31,10 @@ settings:
 packages:
   NimbusKit:
     path: .
+  # Real WireGuard core (wireguard-go bridge) for the Packet Tunnel extension.
+  WireGuardKit:
+    url: https://github.com/WireGuard/wireguard-apple
+    branch: master
 
 targets:
   # ------------------------------------------------------------------ App
@@ -52,6 +56,8 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SUPPORTS_MACCATALYST: NO
         TARGETED_DEVICE_FAMILY: "1,2"
+        # Full build uses the real Packet Tunnel engine (free variant stays simulated).
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) NIMBUS_REAL_TUNNEL"
     scheme:
       testTargets:
         - NimbusVPNTests
@@ -66,6 +72,7 @@ targets:
       - path: Tunnel
     dependencies:
       - package: NimbusKit
+      - package: WireGuardKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: net.nimbus.vpn.tunnel
