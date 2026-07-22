@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Template export options for producing a signed .ipa.
+  Fill in teamID and the two provisioning-profile NAMES (as they appear in your
+  Apple Developer account) for the app and the tunnel extension bundle IDs, and
+  choose the method that matches your profiles:
+    development | ad-hoc | app-store-connect | enterprise
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>method</key>
+    <string>ad-hoc</string>
+    <key>teamID</key>
+    <string>YOUR_TEAM_ID</string>
+    <key>signingStyle</key>
+    <string>manual</string>
+    <key>stripSwiftSymbols</key>
+    <true/>
+    <key>compileBitcode</key>
+    <false/>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>net.nimbus.vpn</key>
+        <string>Nimbus App Profile</string>
+        <key>net.nimbus.vpn.tunnel</key>
+        <string>Nimbus Tunnel Profile</string>
+    </dict>
+</dict>
+</plist>
