@@ -44,6 +44,10 @@ jobs:
     needs: core-tests
     steps:
       - uses: actions/checkout@v4
+      - name: Select latest Xcode
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+          xcodebuild -version
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate Xcode project
@@ -71,6 +75,10 @@ jobs:
     # free Apple ID using Sideloadly/AltStore on Windows — no Mac, no $99 needed.
     steps:
       - uses: actions/checkout@v4
+      - name: Select latest Xcode
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+          xcodebuild -version
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate free-variant project
