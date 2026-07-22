@@ -71,3 +71,5 @@ Join the **Apple Developer Program ($99/yr)**, then:
   signed build you can put on TestFlight.
 
 See `docs/BUILD_IPA.md` for the signed-build details.
+
+<!-- ci: trigger build -->
