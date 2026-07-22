@@ -70,6 +70,8 @@ jobs:
     name: Unsigned .ipa (for AltStore/Sideloadly)
     runs-on: macos-14
     needs: core-tests
+    permissions:
+      contents: write
     # Builds the no-extension free variant for a real device WITHOUT signing, then
     # packages an unsigned .ipa. You then sign+install it on your iPhone with a
     # free Apple ID using Sideloadly/AltStore on Windows — no Mac, no $99 needed.
@@ -112,6 +114,16 @@ jobs:
           name: NimbusVPN-unsigned-ipa
           path: ios/NimbusVPN-unsigned.ipa
           if-no-files-found: error
+      - name: Publish .ipa to a Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete nimbus-latest --yes --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
+          gh release create nimbus-latest ios/NimbusVPN-unsigned.ipa \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Nimbus VPN (unsigned .ipa)" \
+            --notes "Unsigned build from ${GITHUB_SHA}. Install with Sideloadly/AltStore + a free Apple ID (see ios/docs/SIDELOAD.md)."
 
   release-ipa:
     name: Signed .ipa (opt-in)
