@@ -1,0 +1,38 @@
+# Xcode / SwiftPM
+.build/
+DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+xcuserdata/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# SwiftPM
+Package.resolved
+.swiftpm/
+
+# XcodeGen output (generated from project.yml — regenerate with `xcodegen`)
+NimbusVPN.xcodeproj/
+
+# macOS
+.DS_Store
+
+# Fastlane / build products
+build/
+fastlane/report.xml
+fastlane/screenshots
+
+# Scratch / working files
+scratch_*
+
+# Secrets — never commit signing material or provisioning
+*.mobileprovision
+*.p12
+*.cer
+SigningSecrets.xcconfig

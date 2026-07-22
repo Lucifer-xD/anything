@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Manage Personal VPN / NETunnelProviderManager configurations. -->
+    <key>com.apple.developer.networking.networkextension</key>
+    <array>
+        <string>packet-tunnel-provider</string>
+    </array>
+    <!-- Shared container between the app and the tunnel extension. -->
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>group.net.nimbus.vpn</string>
+    </array>
+    <!-- Optional: iCloud (CloudKit) for the encrypted configuration sync. -->
+    <key>com.apple.developer.icloud-services</key>
+    <array>
+        <string>CloudKit</string>
+    </array>
+    <key>com.apple.developer.icloud-container-identifiers</key>
+    <array>
+        <string>iCloud.net.nimbus.vpn</string>
+    </array>
+    <key>keychain-access-groups</key>
+    <array>
+        <string>$(AppIdentifierPrefix)net.nimbus.vpn</string>
+    </array>
+</dict>
+</plist>

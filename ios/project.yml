@@ -1,0 +1,87 @@
+# XcodeGen project spec for Nimbus VPN.
+#
+# The Xcode project is generated (not committed) so there is no hand-edited
+# .pbxproj to rot. On a Mac with Xcode:
+#
+#   brew install xcodegen
+#   cd ios && xcodegen generate
+#   open NimbusVPN.xcodeproj
+#
+# The App and Tunnel targets depend on the local NimbusKit SwiftPM package
+# (the platform-agnostic core, which is unit-tested via `swift test`).
+
+name: NimbusVPN
+options:
+  bundleIdPrefix: net.nimbus
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.9"
+    DEVELOPMENT_TEAM: "" # set your Apple Developer Team ID here
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    SWIFT_STRICT_CONCURRENCY: targeted
+
+packages:
+  NimbusKit:
+    path: .
+
+targets:
+  # ------------------------------------------------------------------ App
+  NimbusVPN:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: App
+    dependencies:
+      - package: NimbusKit
+      - target: NimbusTunnel
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.nimbus.vpn
+        INFOPLIST_FILE: App/Resources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: App/Resources/NimbusVPN.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SUPPORTS_MACCATALYST: NO
+        TARGETED_DEVICE_FAMILY: "1,2"
+    scheme:
+      testTargets:
+        - NimbusVPNTests
+      gatherCoverageData: true
+
+  # -------------------------------------------------- Packet Tunnel provider
+  NimbusTunnel:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Tunnel
+    dependencies:
+      - package: NimbusKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.nimbus.vpn.tunnel
+        INFOPLIST_FILE: Tunnel/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Tunnel/NimbusTunnel.entitlements
+
+  # ------------------------------------------------------------ App unit tests
+  NimbusVPNTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: AppTests
+    dependencies:
+      - target: NimbusVPN
+      - package: NimbusKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.nimbus.vpn.tests
