@@ -60,7 +60,7 @@ public final class AppModel: ObservableObject {
     // Library
     @Published public private(set) var configs: [TunnelConfiguration] = []
     @Published public private(set) var folders: [ConfigFolder] = []
-    @Published public private(set) var subscriptions: [Subscription] = []
+    @Published public private(set) var subscriptions: [NimbusKit.Subscription] = []
     @Published public private(set) var servers: [Server] = []
     @Published public var filter: LibraryFilter = .all
     @Published public var searchText: String = ""
@@ -194,7 +194,7 @@ public final class AppModel: ObservableObject {
             await MainActor.run { self.isRefreshingSubscriptions = false }
         }
     }
-    public func addSubscription(_ sub: Subscription) { Task { try? await services.store.saveSubscription(sub) } }
+    public func addSubscription(_ sub: NimbusKit.Subscription) { Task { try? await services.store.saveSubscription(sub) } }
     public func deleteSubscription(_ id: UUID) { Task { try? await services.store.deleteSubscription(id: id) } }
 
     // MARK: - Intents: logs & stats
