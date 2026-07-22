@@ -31,10 +31,12 @@ settings:
 packages:
   NimbusKit:
     path: .
-  # Real WireGuard core (wireguard-go bridge) for the Packet Tunnel extension.
-  WireGuardKit:
-    url: https://github.com/WireGuard/wireguard-apple
-    branch: master
+  # NOTE: WireGuardKit (github.com/WireGuard/wireguard-apple) is NOT added here as
+  # a plain SPM package — its manifest is broken for modern SwiftPM and its Go
+  # bridge builds via a Makefile that headless `xcodebuild` won't run. Integrate
+  # it as a git submodule + Xcode subproject on Xcode Cloud / a Mac. The provider
+  # code is already written and compiles in behind `#if canImport(WireGuardKit)`.
+  # See docs/WIREGUARD.md.
 
 targets:
   # ------------------------------------------------------------------ App
@@ -72,7 +74,6 @@ targets:
       - path: Tunnel
     dependencies:
       - package: NimbusKit
-      - package: WireGuardKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: net.nimbus.vpn.tunnel
